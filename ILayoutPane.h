@@ -22,15 +22,11 @@ limitations under the License.
 
 typedef int64_t LayoutPaneFlag; // int64_t give 64 Panes max.
 typedef std::string LayoutPaneName;
+typedef void* LayoutPaneUserDatas;
 
 struct ImVec2;
 struct ImRect;
 struct ImGuiContext;
-
-struct ContextDatas {
-    uint32_t currentFrame{0U};
-    ImGuiContext* pImGuiContext{nullptr};
-};
 
 class ILayoutPane {
 private: 
@@ -42,29 +38,23 @@ public:
     virtual void unit() = 0;
 
     // the return, is a user side use case here
-    virtual bool drawPanes(bool* apOpened, ContextDatas& aContext, void* apUserDatas) = 0;
-    virtual bool drawWidgets(ContextDatas& aContext, void*apvUserDatas) = 0;
-    virtual bool drawOverlays(const ImRect& aRect, ContextDatas& aContext, void* apUserDatas) = 0;
-    virtual bool drawDialogsAndPopups(const ImRect& aRect, ContextDatas& aContext, void* apUserDatas) = 0;
+    virtual bool drawPanes(bool* apOpened, LayoutPaneUserDatas apUserDatas) = 0;
+    virtual bool drawWidgets(LayoutPaneUserDatas apvUserDatas) = 0;
+    virtual bool drawOverlays(const ImRect& aRect, LayoutPaneUserDatas apUserDatas) = 0;
+    virtual bool drawDialogsAndPopups(const ImRect& aRect, LayoutPaneUserDatas apUserDatas) = 0;
 
     // if for any reason the pane must be hidden temporary, the user can control this here
     virtual bool canBeDisplayed() = 0;
 
 public:
-    void setName(const LayoutPaneName& aName) {
-        paneName = aName;
-    }
-    const LayoutPaneName& getName() const {
-        return paneName;
-    }
-    void setFlag(const LayoutPaneFlag& aFlag) {
+    void setName(const LayoutPaneName& aName) { paneName = aName; }
+    const LayoutPaneName& getName() const { return paneName; }
+    void setFlag(LayoutPaneFlag aFlag) {
         if (paneFlag < 0) {  // ensure than this can be done only one time
             paneFlag = aFlag;
         }
     }
-    const LayoutPaneFlag& getFlag() const {
-        return paneFlag;
-    }
+    LayoutPaneFlag getFlag() const { return paneFlag; }
 };
 
 typedef std::weak_ptr<ILayoutPane> ILayoutPaneWeak;
