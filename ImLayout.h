@@ -17,7 +17,11 @@ limitations under the License.
 #pragma once
 #pragma warning(disable : 4275)
 
-#include <imguipack.h>
+#ifdef IMGUI_INCLUDE
+#include IMGUI_INCLUDE
+#else
+#include <imgui_internal.h>
+#endif
 
 #ifndef ILAYOUT_PANE_INCLUDE
 #include <ILayoutPane.h>
@@ -25,7 +29,6 @@ limitations under the License.
 #include ILAYOUT_PANE_INCLUDE
 #endif
 
-#include <3rdparty/imgui_docking/imgui.h>
 #include <array>
 #include <string>
 #include <unordered_map>
@@ -58,10 +61,10 @@ public:
     // the return, is a user side use case here
 
     // the return, is a user side use case here
-    bool drawPanes(bool* apOpened, ContextDatas& aContext, void* apUserDatas) override = 0;
-    bool drawWidgets(ContextDatas& aContext, void* apvUserDatas) override { return false; }
-    bool drawOverlays(const ImRect& aRect, ContextDatas& aContext, void* apUserDatas) override { return false; }
-    bool drawDialogsAndPopups(const ImRect& aRect, ContextDatas& aContext, void* apUserDatas) override { return false; }
+    bool drawPanes(bool* apOpened, LayoutPaneUserDatas apUserDatas) override = 0;
+    bool drawWidgets(LayoutPaneUserDatas apUserDatas) override { return false; }
+    bool drawOverlays(const ImRect& aRect, LayoutPaneUserDatas apUserDatas) override { return false; }
+    bool drawDialogsAndPopups(const ImRect& aRect, LayoutPaneUserDatas apUserDatas) override { return false; }
 
     // if for any reason the pane must be hidden temporary, the user can control this here
     bool canBeDisplayed() override { return true; }
@@ -71,14 +74,14 @@ typedef std::shared_ptr<AbstractPane> AbstractPanePtr;
 typedef std::weak_ptr<AbstractPane> AbstractPaneWeak;
 
 class ProjectFile;
-class IMGUI_API LayoutManager
+class IMGUI_API ImLayout
 #ifdef EZ_TOOLS_XML_CONFIG
     : public ez::xml::Config
 #endif  // EZ_TOOLS_XML_CONFIG
 {
 public:
     class IMGUI_API PaneInfos {
-        friend class LayoutManager;
+        friend class ImLayout;
 
     private:
         LayoutPaneFlag m_paneFlag{0};
@@ -162,10 +165,10 @@ public:
     void applyInitialDockingLayout(const ImVec2& vSize = ImVec2(0, 0));
 
     virtual void drawMenu(const ImVec2& vSize);
-    virtual bool drawPanes(ContextDatas& aContext, void* apUserDatas = nullptr);
-    virtual bool drawWidgets(ContextDatas& aContext, void* apvUserDatas = nullptr);
-    virtual bool drawOverlays(const ImRect& aRect, ContextDatas& aContext, void* apUserDatas = nullptr);
-    virtual bool drawDialogsAndPopups(const ImRect& aRect, ContextDatas& aContext, void* apUserDatas = nullptr);
+    virtual bool drawPanes(LayoutPaneUserDatas apUserDatas = nullptr);
+    virtual bool drawWidgets(LayoutPaneUserDatas apUserDatas = nullptr);
+    virtual bool drawOverlays(const ImRect& aRect, LayoutPaneUserDatas apUserDatas = nullptr);
+    virtual bool drawDialogsAndPopups(const ImRect& aRect, LayoutPaneUserDatas apUserDatas = nullptr);
 
     void showSpecificPane(const LayoutPaneFlag vPane);
     void hideSpecificPane(const LayoutPaneFlag vPane);
@@ -198,9 +201,9 @@ public:  // configuration
 public:  // singleton
 // old behavior
 #ifdef LEGACY_SINGLETON
-    static LayoutManager* Instance(LayoutManager* vCopy = nullptr, bool vForce = false) {
-        static LayoutManager _instance;
-        static LayoutManager* _instance_copy = nullptr;
+    static ImLayout* Instance(ImLayout* vCopy = nullptr, bool vForce = false) {
+        static ImLayout _instance;
+        static ImLayout* _instance_copy = nullptr;
         if (vCopy || vForce) {
             _instance_copy = vCopy;
         }
@@ -210,19 +213,19 @@ public:  // singleton
         return &_instance;
     }
 #else   // LEGACY_SINGLETON
-    static std::unique_ptr<LayoutManager>& initSingleton() {
-        static auto mp_instance = std::unique_ptr<LayoutManager>(new LayoutManager());
+    static std::unique_ptr<ImLayout>& initSingleton() {
+        static auto mp_instance = std::unique_ptr<ImLayout>(new ImLayout());
         return mp_instance;
     }
-    static LayoutManager& ref() { return *initSingleton().get(); }
+    static ImLayout& ref() { return *initSingleton().get(); }
     static void unitSingleton() { initSingleton().reset(); }
 #endif  // LEGACY_SINGLETON
 
 public:
-    LayoutManager();  // Prevent construction
-    LayoutManager(const LayoutManager&) = delete;
-    LayoutManager& operator=(const LayoutManager&) = delete;
-    virtual ~LayoutManager();  // Prevent unwanted destruction
+    ImLayout();  // Prevent construction
+    ImLayout(const ImLayout&) = delete;
+    ImLayout& operator=(const ImLayout&) = delete;
+    virtual ~ImLayout();  // Prevent unwanted destruction
 };
 
-typedef LayoutManager::PaneInfos LayoutPaneInfos;
+typedef ImLayout::PaneInfos LayoutPaneInfos;

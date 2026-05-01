@@ -39,7 +39,7 @@ public:
 
     // the return, is a user side use case here
     virtual bool drawPanes(bool* apOpened, LayoutPaneUserDatas apUserDatas) = 0;
-    virtual bool drawWidgets(LayoutPaneUserDatas apvUserDatas) = 0;
+    virtual bool drawWidgets(LayoutPaneUserDatas apUserDatas) = 0;
     virtual bool drawOverlays(const ImRect& aRect, LayoutPaneUserDatas apUserDatas) = 0;
     virtual bool drawDialogsAndPopups(const ImRect& aRect, LayoutPaneUserDatas apUserDatas) = 0;
 
