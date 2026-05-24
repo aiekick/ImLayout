@@ -213,12 +213,19 @@ public:  // singleton
         return &_instance;
     }
 #else   // LEGACY_SINGLETON
-    static std::unique_ptr<ImLayout>& initSingleton() {
-        static auto mp_instance = std::unique_ptr<ImLayout>(new ImLayout());
+private:
+    static std::unique_ptr<ImLayout>& getSingletonPtr() {
+        static std::unique_ptr<ImLayout> mp_instance;
         return mp_instance;
     }
-    static ImLayout& ref() { return *initSingleton().get(); }
-    static void unitSingleton() { initSingleton().reset(); }
+
+public:
+    static void initSingleton() {
+        auto& mp_instance = getSingletonPtr();
+        mp_instance.reset(new ImLayout());
+    }
+    static ImLayout& ref() { return *getSingletonPtr().get(); }
+    static void unitSingleton() { getSingletonPtr().reset(); }
 #endif  // LEGACY_SINGLETON
 
 public:
