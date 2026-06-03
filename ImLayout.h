@@ -29,6 +29,7 @@ limitations under the License.
 #include ILAYOUT_PANE_INCLUDE
 #endif
 
+#include <cassert>
 #include <array>
 #include <string>
 #include <unordered_map>
@@ -224,7 +225,11 @@ public:
         auto& mp_instance = getSingletonPtr();
         mp_instance.reset(new ImLayout());
     }
-    static ImLayout& ref() { return *getSingletonPtr().get(); }
+    static ImLayout& ref() {
+        auto* const ptr = getSingletonPtr().get();
+        assert(ptr != nullptr && "You must call initSingleton() before use of ref()");
+        return *ptr;
+    }
     static void unitSingleton() { getSingletonPtr().reset(); }
 #endif  // LEGACY_SINGLETON
 
