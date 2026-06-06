@@ -54,24 +54,6 @@ public:
 ///// ImLayout::PaneInfos //////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-ImLayout::PaneInfos::PaneInfos(
-    ILayoutPaneWeak vPane,
-    const LayoutPaneName& vName,
-    const PaneMenuCategoryName& vMenuCategory,
-    const PaneMenuName& vMenuName,
-    const PaneDisposal& vPaneDisposal,
-    const float vPaneDisposalRatio,
-    const bool vIsOpenedDefault,
-    const bool vIsFocusedDefault)
-    : ilayoutPane(vPane),
-      paneName(vName),
-      paneMenuCategoryName(vMenuCategory),
-      paneMenuName(!vMenuName.empty() ? vMenuName : vName),
-      paneDisposal(vPaneDisposal),
-      paneDisposalRatio(vPaneDisposalRatio),
-      openedDefault(vIsOpenedDefault),
-      focusedDefault(vIsFocusedDefault) {}
-
 ImLayout::PaneInfos::PaneInfos(ILayoutPaneWeak vPane, const std::string& vName) : ilayoutPane(vPane), paneName(vName) {}
 ImLayout::PaneInfos& ImLayout::PaneInfos::setMenu(const std::string& vName, const std::string& vCategory) {
     paneMenuName = vName;

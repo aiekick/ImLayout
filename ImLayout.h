@@ -100,15 +100,6 @@ public:
         PaneMenuCategoryName paneMenuCategoryName;
         PaneMenuName paneMenuName;
         PaneInfos() = default;
-        PaneInfos(
-            ILayoutPaneWeak vPane,
-            const LayoutPaneName& vName,
-            const PaneMenuCategoryName& vMenuCategory,
-            const PaneMenuName& vMenuName,
-            const PaneDisposal& vPaneDisposal,
-            const float vPaneDisposalRatio,
-            const bool vIsOpenedDefault,
-            const bool vIsFocusedDefault);
         PaneInfos(ILayoutPaneWeak vPane, const std::string& vName);
         PaneInfos& setMenu(const std::string& vName, const std::string& vCategory = {});
         PaneInfos& setDisposalSide(const std::string& vDisposal, const float vDisposalRatio = 0.4f);
