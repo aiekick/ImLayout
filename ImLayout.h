@@ -186,8 +186,8 @@ private:  // configuration
 
 #ifdef EZ_TOOLS_XML_CONFIG
 public:  // configuration
-    ez::xml::Nodes getXmlNodes(const std::string& vUserDatas = "") override;
-    bool setFromXmlNodes(const ez::xml::Node& vNode, const ez::xml::Node& vParent, const std::string& vUserDatas) override;
+    ez::xml::Nodes getXmlNodes(const std::string& aUserDatas = "") override;
+    bool setFromXmlNodes(const ez::xml::Node& aNode, const ez::xml::Node& aParent, const std::string& aUserDatas) override;
 #endif  // EZ_TOOLS_XML_CONFIG
 
 public:  // singleton

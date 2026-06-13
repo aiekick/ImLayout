@@ -615,7 +615,7 @@ std::vector<std::string> ImLayout::m_ParsePaneDisposal(const PaneDisposal& vPane
 
 #ifdef EZ_TOOLS_XML_CONFIG
 
-ez::xml::Nodes ImLayout::getXmlNodes(const std::string& vUserDatas) {
+ez::xml::Nodes ImLayout::getXmlNodes(const std::string& aUserDatas) {
     ez::xml::Node node("layout");
     m_paneFocused = m_GetFocusedPanes();
     node.addChild("panes")
@@ -624,14 +624,14 @@ ez::xml::Nodes ImLayout::getXmlNodes(const std::string& vUserDatas) {
     return {node};
 }
 
-bool ImLayout::setFromXmlNodes(const ez::xml::Node& vNode, const ez::xml::Node& vParent, const std::string& vUserDatas) {
+bool ImLayout::setFromXmlNodes(const ez::xml::Node& aNode, const ez::xml::Node& aParent, const std::string& aUserDatas) {
     // The value of this child identifies the name of this element
-    if (vParent.getName() == "layout") {
-        if (vNode.isAttributeExist("opened")) {
-            m_paneShown = vNode.getAttribute<LayoutPaneFlag>("opened");
+    if (aParent.getName() == "layout") {
+        if (aNode.isAttributeExist("opened")) {
+            m_paneShown = aNode.getAttribute<LayoutPaneFlag>("opened");
         }
-        if (vNode.isAttributeExist("active")) {
-            m_paneFocused = vNode.getAttribute<LayoutPaneFlag>("active");
+        if (aNode.isAttributeExist("active")) {
+            m_paneFocused = aNode.getAttribute<LayoutPaneFlag>("active");
         }
     }
     return false;
